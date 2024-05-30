@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/styles-basics.css' %}?">
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+
+
+    {% if title %}
+        <title>Home - {{ title }}</title>
+    {% else %}
+        <title>Home</title>
+    {% endif %}
+</head>
+<body>
+    <header>
+      {# <a href="{% url 'home' %}">Home</a> #}
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}">Profile</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+          <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+
+        <nav>
+		<ul>
+			<li><a href="{% url 'home' %}">Home</a></li>
+			<li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'activities:list' %}">Activities</a></li>
+		</ul>
+        </nav>
+    </header>
+    <main>
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+
+    </main>
+<footer>
+<p>
+    &copy; copyright 2024 Jana Losova
+</p>
+    <p>  <a href="{% url 'privacy_policy' %}">Privacy Policy</a></p>
+</footer>
+ </body>
+</html>

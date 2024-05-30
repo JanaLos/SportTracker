@@ -1,0 +1,41 @@
+
+ h1 {
+   background-color: green;
+ }
+
+ .invalid-feedback {
+   color: red;
+ }
+
+
+
+th {
+background-color: orange;
+}
+
+
+
+a.tlacitko {
+  /*color: #fff;*/ /* barva textu */
+  color: black;
+  font-weight: bold;
+  text-decoration: none; /* odebrat podtržení u odkazů */
+  user-select: none; /* zakázat označování textu */
+  /*background: rgb(212,75,56);*/ /* pozadí tlačítka */
+  background:Tomato;
+  padding: .7em 1.5em; /* odsazení od textu */
+  outline: none; /* odstraňovat vnější rámeček v Mozilla */
+  display: inline-block;
+  margin: 8px;
+}
+a.tlacitko:hover { background: rgb(232,95,76); } /* při najetí myší */
+a.tlacitko:active { background: rgb(152,15,0); } /* při stisknutí */
+
+
+img {
+  display: block;
+  margin-left: 200px;
+  margin-right: auto;
+  width: 20%;
+}
+

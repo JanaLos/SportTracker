@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{object.name}}{% endblock %}
+{% block content %}
+<div class="box has-text-centered">
+  <form action="" method="post">{% csrf_token %}
+      <p class="mb-3">¿Estás seguro de que quieres borrar <b>"{{ object }}"</b>?</p>
+      <input class="button is-primary" type="submit" value="Ano, smazat stránku" />
+      <input class="button is-danger" onclick="history.go(-1); return false;" value="Zrušit" />
+  </form>
+</div>
+{% endblock %}

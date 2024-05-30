@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{object.name}}{% endblock %}
+{% block content %}
+<main role="main">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md-9 mx-auto">
+        <h2 class="title">{{object.name}}</h2>
+        <div>
+          name: {{object.name|safe}}<br />
+          km_count: {{object.km_count}}<br />
+          {% if request.user.is_staff %}
+          <br />
+            <p><a href="{% url 'activities:list' %}">Vratit se</a></p>
+            <p><a href="{% url 'activities:update' object.id %}">Upravit</a></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

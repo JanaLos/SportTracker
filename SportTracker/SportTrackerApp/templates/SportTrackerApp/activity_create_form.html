@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Create{% endblock title %}
+
+{% block content %}
+<form method="post">
+   {% csrf_token %}
+   {{ form.as_p }}
+   <div class="field">
+     <button type="submit" class="button is-primary">Create</button>
+   </div>
+   <input type="hidden" name="next" value="{{ next }}"/>
+</form>
+<p><a href="{% url 'activities:list' %}">Vrátit se</a></p>
+{% endblock content %}

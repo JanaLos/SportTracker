@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Update{% endblock title %}
+
+{% block content %}
+{% if 'ok' in request.GET %}
+    <article class="message is-primary">
+      <div class="message-header">
+        <p>Actualizado</p>
+        <button class="delete" aria-label="delete"></button>
+      </div>
+      <div class="message-body">
+          Updated. <a href="{% url 'activities:detail' activity.id activity.name|slugify %}">more details here.</a>
+      </div>
+    </article>
+{% endif %}
+<form method="post">
+   {% csrf_token %}
+   {{ form.as_p }}
+   <div class="field">
+     <button type="submit" class="button is-primary">Update</button>
+   </div>
+   <input type="hidden" name="next" value="{{ next }}"/>
+</form>
+<p><a href="{% url 'activities:list' %}">Vratit se</a></p>
+{% endblock content %}

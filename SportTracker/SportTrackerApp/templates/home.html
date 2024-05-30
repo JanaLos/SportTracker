@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Home</h1>
+    {% for post in posts %}
+        <a href="#">{{ post.author }}</a>
+        <small >{{ post.date_posted|date:"F d, Y" }}</small>
+        <h2><a href="#">{{ post.title }}</a></h2>
+        <p>{{ post.content }}</p>
+    {% endfor %}
+
+<img src="{% static 'img/Runstatic.jpg' %}">
+
+<h1>Seznam sportovních aktivit</h1>
+    <form method="get">
+        {{ form.as_p }}
+       {# <button type="submit">Filtrovat</button> #}
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Název</th>
+                <th>Místo</th>
+                <th>Počet km</th>
+                <th>Datum konaní</th>
+                <th>Popis</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.name }}</td>
+                    <td>{{ activity.place }}</td>
+                    <td>{{ activity.km_count }}</td>
+                    <td>{{ activity.date|date:"d.m.Y" }}</td>
+                    <td>{{ activity.description }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Žádné aktivity nebyly nalezeny.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+

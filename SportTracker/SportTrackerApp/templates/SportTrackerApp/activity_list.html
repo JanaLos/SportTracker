@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SportTrackerApp{% endblock %}
+{% block content %}
+<img src="{% static 'img/default.jpg' %}">
+    <div></div>
+    <form method='GET'>
+      <div class="columns is-centered mb-1">
+        <div class="column is-11">
+            <p class="control has-icons-left">
+              <input class='input' type='text' name='q' value='{{ request.GET.q }}' placeholder="Search">
+              <span class="icon is-left">
+                <i class="rychle vyhledavani" aria-hidden="true"></i>
+              </span>
+            </p>
+        </div>
+        <div class="column">
+          <input class="button is-primary" type='submit' value="Search">
+        </div>
+
+      </div>
+
+    </form>
+
+    {% if activity_list|length == 0 %}
+        No results found
+        {# <a href="{% url 'activities:create' %}" class="card-footer-item">Create</a> #}
+    {% endif %}
+
+    {% if request.user.is_staff %}
+      <a href="{% url 'activities:create' %}" class="tlacitko">+ Create</a>
+    {% endif %}
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Název</th>
+                <th>Místo</th>
+                <th>Počet km</th>
+                <th>Datum konaní</th>
+                <th>Popis</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in activity_list %}
+                <tr>
+                    <td>{{ activity.name }}</td>
+                    <td>{{ activity.place }}</td>
+                    <td>{{ activity.km_count }}</td>
+                    <td>{{ activity.date|date:"d.m.Y" }}</td>
+                    <td>{{ activity.description }}</td>
+                    <td>
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'activities:delete' activity.id %}" class="card-footer-item">Delete</a>
+                            <a href="{% url 'activities:update' activity.id %}" class="card-footer-item">Edit</a>
+                        {% endif %}
+                        <a href="{% url 'activities:detail' activity.id activity.name|slugify %}" class="card-footer-item">Read more ...</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">Žádné aktivity nebyly nalezeny.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<!--    {% for activity in activity_list %}-->
+
+<!--      <div class="card">-->
+<!--        <header class="card-header">-->
+<!--          <p class="card-header-title">-->
+<!--            {{ activity.name }}-->
+<!--          </p>-->
+<!--          <a href="#" class="card-header-icon" aria-label="more options">-->
+<!--            <span class="icon">-->
+<!--              <i class="fas fa-angle-down" aria-hidden="true"></i>-->
+<!--            </span>-->
+<!--          </a>-->
+<!--        </header>-->
+<!--        <div class="card-content">-->
+<!--          <div class="content">-->
+<!--            {{activity.description|striptags|safe|truncatechars:"200"}} {{activity.km_count}}-->
+<!--            <br />-->
+<!--            <time datetime="2024-6-1">{{activity.created}}</time>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <footer class="card-footer">-->
+
+<!--          {% if request.user.is_staff %}-->
+<!--             <a href="{% url 'activities:create' %}" class="card-footer-item">Create</a>-->
+<!--           <a href="{% url 'activities:delete' activity.id %}" class="card-footer-item">Delete</a>-->
+<!--            <a href="{% url 'activities:update' activity.id %}" class="card-footer-item">Edit</a>-->
+<!--          {% endif %}-->
+<!--           <a href="{% url 'activities:detail' activity.id activity.name|slugify %}" class="card-footer-item">Read more ...</a>-->
+<!--        </footer>-->
+<!--      </div>-->
+
+<!--    <br />-->
+
+<!--    {% endfor %}-->
+
+
+
+    {% if activity_obj.paginator.num_pages > 1 %}
+    <nav class="pagination" role="navigation" aria-label="pagination">
+      {% if activity_obj.has_previous %}
+          <a class="pagination-previous" href="?page={{ activity_obj.previous_page_number }}&q={{ request.GET.q }}">Previous</a>
+      {% endif %}
+      {% if activity_obj.has_next %}
+          <a class="pagination-next" href="?page={{ activity_obj.next_page_number }}&q={{ request.GET.q }}">Next page</a>
+      {% endif %}
+      <ul class="pagination-list">
+        {% if activity_obj.number > 3 %}
+          <li>
+            <a class="pagination-link" aria-label="Goto page 1" href="?page=1&q={{ request.GET.q }}">1</a>
+          </li>
+          {% if activity_obj.number > 4 %}
+            <li>
+              <span class="pagination-ellipsis">&hellip;</span>
+            </li>
+          {% endif %}
+        {% endif %}
+
+        {% for i in activity_obj.paginator.page_range %}
+        <li>
+          {% with leftmax=activity_obj.number|add:"-3" %}
+            {% with rightmax=activity_obj.number|add:"+3" %}
+              {% if leftmax < i %}
+                {% if i < rightmax %}
+
+                  {% if i == activity_obj.number %}
+                    <a class="pagination-link is-current" aria-label="Goto page {{ i }}" href="?page={{ i }}&q={{ request.GET.q }}" aria-current="page">{{ i }}</a>
+                  {% else %}
+                    <a class="pagination-link" aria-label="Goto page {{ i }}" href="?page={{ i }}&q={{ request.GET.q }}">{{ i }}</a>
+                  {% endif %}
+
+                {% endif %}
+              {% endif %}
+            {% endwith %}
+          {% endwith %}
+        </li>
+        {% endfor %}
+
+        {% with rightdistance=activity_obj.paginator.num_pages|add:"-2" %}
+          {% with rightdistanceplus=activity_obj.paginator.num_pages|add:"-3" %}
+            {% if activity_obj.number < rightdistance %}
+              {% if activity_obj.number < rightdistanceplus %}
+                <li>
+                  <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+              {% endif %}
+              <li>
+                <a class="pagination-link" aria-label="Goto page {{ activity_obj.paginator.num_pages }}" href="?page={{ activity_obj.paginator.num_pages }}&q={{ request.GET.q }}">{{ activity_obj.paginator.num_pages }}</a>
+              </li>
+            {% endif %}
+          {% endwith %}
+        {% endwith %}
+
+      </ul>
+    </nav>
+    {% endif %}
+
+{% endblock %}
